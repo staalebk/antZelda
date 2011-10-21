@@ -154,12 +154,12 @@ public class Zelda extends Bot {
 					
 					Ilk target = ants.getIlk(newLoc);
 					switch(target) {
-						case DEAD: rowstatus += "x"; break;
+						case DEAD: 		rowstatus += "x"; break;
 						case ENEMY_ANT: rowstatus += "e"; break;
-						case FOOD: rowstatus += "f"; break;
-						case LAND: rowstatus += " "; break;
-						case MY_ANT: rowstatus += "M"; break;
-						case WATER: rowstatus += "w"; break;
+						case FOOD: 		rowstatus += "f"; break;
+						case LAND: 		rowstatus += " "; break;
+						case MY_ANT: 	rowstatus += "M"; break;
+						case WATER: 	rowstatus += "w"; break;
 					}
 						
 				} else {
