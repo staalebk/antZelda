@@ -2,12 +2,12 @@
 cd src
 rem clean
 del *.class
-del Zelda.jar
+del MyBot.jar
 rem compile
-javac Zelda.java
+javac MyBot.java
 rem package
-jar cvfm Zelda.jar Manifest.txt *.class 
+jar cvfm MyBot.jar Manifest.txt *.class 
 rem clean
 del *.class
-move Zelda.jar ../
+move MyBot.jar ../
 cd..
