@@ -12,7 +12,7 @@ public class Zelda extends Bot {
      * @throws IOException if an I/O error occurs
      */
     public static void main(String[] args) throws IOException {
-        new MyBot().readSystemInput();
+        new Zelda().readSystemInput();
     }
     
     /**
