@@ -151,20 +151,17 @@ public class Zelda extends Bot {
 				}
 				if (seenTiles[row][col]) {
 					Tile newLoc = new Tile(row, col);
-					if (ants.getIlk(newLoc) == Ilk.DEAD)
-						rowstatus += "x";
-					else if (ants.getIlk(newLoc) == Ilk.ENEMY_ANT)
-						rowstatus += "e";
-					else if (ants.getIlk(newLoc) == Ilk.FOOD)
-						rowstatus += "f";
-					else if (ants.getIlk(newLoc) == Ilk.LAND)
-						rowstatus += " ";
-					else if (ants.getIlk(newLoc) == Ilk.MY_ANT)
-						rowstatus += "M";
-					else if (ants.getIlk(newLoc) == Ilk.WATER)
-						rowstatus += "w";
-					else
-						rowstatus += "_";
+					
+					Ilk target = ants.getIlk(newLoc);
+					switch(target) {
+						case DEAD: rowstatus += "x"; break;
+						case ENEMY_ANT: rowstatus += "e"; break;
+						case FOOD: rowstatus += "f"; break;
+						case LAND: rowstatus += " "; break;
+						case MY_ANT: rowstatus += "M"; break;
+						case WATER: rowstatus += "w"; break;
+					}
+						
 				} else {
 					rowstatus += "?";
 				}
