@@ -1,10 +1,10 @@
 @echo off
 rem clean
 del *.class
-del zelda.jar
+del Zelda.jar
 rem compile
-javac zelda.java
+javac Zelda.java
 rem package
-jar cvfm zelda.jar Manifest.txt *.class 
+jar cvfm Zelda.jar Manifest.txt *.class 
 rem clean
 del *.class
