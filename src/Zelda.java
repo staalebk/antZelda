@@ -50,7 +50,7 @@ public class Zelda extends Bot {
 		}
 	}
 
-	public void printf(String log) {
+	public void addToLog(String log) {
 		try {
 			logfile.write(log + "\n");
 		} catch (IOException e) {
@@ -83,7 +83,7 @@ public class Zelda extends Bot {
 				Collections.shuffle(pDir);
 				for (Aim direction : pDir) {
 					if (attemptMovement(ants, orders, myAnt, direction)) {
-						printf("Going for food!");
+						addToLog("Going for food! Ant at " + myAnt + " wants to go to " + food + " (dist: " + Math.sqrt(distance) + ")");
 						break;
 					}
 				}
@@ -111,7 +111,7 @@ public class Zelda extends Bot {
 					Collections.shuffle(pDir);
 					for (Aim direction : pDir) {
 						if (attemptMovement(ants, orders, myAnt, direction)) {
-							printf("Going to explore! " + distance + " " + unseen.getRow() + " " + unseen.getCol());
+							addToLog("Going to explore! Ant at " + myAnt + " wants to go to " + unseen + " (dist: " + Math.sqrt(distance) + ")");
 							break;
 						}
 					}
@@ -120,7 +120,7 @@ public class Zelda extends Bot {
 					// Crazy move mode
 					for (Aim direction : Aim.values()) {
 						if (attemptMovement(ants, orders, myAnt, direction)) {
-							printf("Going nuts!");
+							addToLog("Going nuts!");
 							setAllUnseen();
 							break;
 						}
@@ -170,10 +170,10 @@ public class Zelda extends Bot {
 				}
 
 			}
-			printf(rowstatus);
+			addToLog(rowstatus);
 			rowstatus = "";
 		}
-		printf("------------------------------");
+		addToLog("------------------------------");
 	}
 }
 
