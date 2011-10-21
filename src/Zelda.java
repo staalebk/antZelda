@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Starter bot implementation.
@@ -27,7 +28,7 @@ public class Zelda extends Bot {
             return false;
         }
     }
-
+    
     @Override
     public void doTurn() {
         HashMap<Tile, Tile> orders = new HashMap<Tile, Tile>();
@@ -36,11 +37,29 @@ public class Zelda extends Bot {
         
         
         for (Tile myAnt : ants.getMyAnts()) {
-            for (Aim direction : Aim.values()) {
-                if (doMoveDirection(ants, orders, myAnt, direction)) {
-                    break;
+        	int distance = 666;
+        	Tile food = null;
+        	for (Tile foodTile :ants.getFoodTiles()) {
+        		int d = ants.getDistance(foodTile, myAnt);
+        		if(d < distance){
+        			distance = d;
+        			food = foodTile;
+        		}
+        	}
+        	if(food != null){
+        		List<Aim> pDir = ants.getDirections(myAnt, food);
+        		for (Aim direction : pDir){
+                    if (doMoveDirection(ants, orders, myAnt, direction)) {
+                        break;
+                    }
+        		}
+        	} else {
+                for (Aim direction : Aim.values()) {
+                    if (doMoveDirection(ants, orders, myAnt, direction)) {
+                        break;
+                    }
                 }
-            }
+        	}
         }
     }
 }
