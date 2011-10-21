@@ -24,7 +24,7 @@ public class Zelda extends Bot {
 		new Zelda().readSystemInput();
 	}
 
-	public boolean doMoveDirection(Ants ants, HashMap<Tile, Tile> orders, Tile antLoc, Aim direction) {
+	public boolean attemptMovement(Ants ants, HashMap<Tile, Tile> orders, Tile antLoc, Aim direction) {
 		// Track all moves, prevent collisions
 		Tile newLoc = ants.getTile(antLoc, direction);
 		if (ants.getIlk(newLoc).isUnoccupied() && !orders.containsKey(newLoc)) {
@@ -39,11 +39,13 @@ public class Zelda extends Bot {
 	@Override
 	public void setup(int loadTime, int turnTime, int rows, int cols, int turns, int viewRadius2, int attackRadius2, int spawnRadius2) {
 		super.setup(loadTime, turnTime, rows, cols, turns, viewRadius2, attackRadius2, spawnRadius2);
+		
 		seenTiles = new boolean[rows][cols];
+		setAllUnseen();
+		
 		try {
 			logfile = new FileWriter("c:/kjell.txt");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -52,7 +54,6 @@ public class Zelda extends Bot {
 		try {
 			logfile.write(log + "\n");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -61,9 +62,12 @@ public class Zelda extends Bot {
 	public void doTurn() {
 		HashMap<Tile, Tile> orders = new HashMap<Tile, Tile>();
 		Ants ants = getAnts();
+		
 		updateSeen(ants);
+		
 		for (Tile myAnt : ants.getMyAnts()) {
-			int distance = 666;
+			// Look for food tiles
+			int distance = Integer.MAX_VALUE;
 			Tile food = null;
 			for (Tile foodTile : ants.getFoodTiles()) {
 				int d = ants.getDistance(foodTile, myAnt);
@@ -72,18 +76,22 @@ public class Zelda extends Bot {
 					food = foodTile;
 				}
 			}
+			
 			if (food != null) {
+				// Found food. Try to move towards it...
 				List<Aim> pDir = ants.getDirections(myAnt, food);
 				Collections.shuffle(pDir);
 				for (Aim direction : pDir) {
-					if (doMoveDirection(ants, orders, myAnt, direction)) {
+					if (attemptMovement(ants, orders, myAnt, direction)) {
 						printf("Going for food!");
 						break;
 					}
 				}
+				
 			} else {
+				// Look for unseen tiles
 				Tile unseen = null;
-				distance = 666;
+				distance = Integer.MAX_VALUE;
 				for (int row = 0; row < ants.getRows(); row++) {
 					for (int col = 0; col < ants.getCols(); col++) {
 						if (!seenTiles[row][col]) {
@@ -96,31 +104,36 @@ public class Zelda extends Bot {
 						}
 					}
 				}
+				
 				if (unseen != null) {
+					// Found unseen tile. Explore in its direction
 					List<Aim> pDir = ants.getDirections(myAnt, unseen);
 					Collections.shuffle(pDir);
 					for (Aim direction : pDir) {
-						if (doMoveDirection(ants, orders, myAnt, direction)) {
+						if (attemptMovement(ants, orders, myAnt, direction)) {
 							printf("Going to explore! " + distance + " " + unseen.getRow() + " " + unseen.getCol());
 							break;
 						}
 					}
+					
 				} else {
+					// Crazy move mode
 					for (Aim direction : Aim.values()) {
-						if (doMoveDirection(ants, orders, myAnt, direction)) {
+						if (attemptMovement(ants, orders, myAnt, direction)) {
 							printf("Going nuts!");
-							setAllUnseen(ants);
+							setAllUnseen();
 							break;
 						}
 					}
 				}
+				
 			}
 		}
 	}
 
-	public void setAllUnseen(Ants ants) {
-		for (int row = 0; row < ants.getRows(); row++) {
-			for (int col = 0; col < ants.getCols(); col++) {
+	public void setAllUnseen() {
+		for (int row = 0; row < seenTiles.length; row++) {
+			for (int col = 0; col < seenTiles[row].length; col++) {
 				seenTiles[row][col] = false;
 			}
 		}
