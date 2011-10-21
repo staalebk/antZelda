@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.HashMap;
 
 /**
  * Starter bot implementation.
@@ -15,17 +16,25 @@ public class Zelda extends Bot {
         new Zelda().readSystemInput();
     }
     
-    /**
-     * For every ant check every direction in fixed order (N, E, S, W) and move it if the tile is
-     * passable.
-     */
+    public boolean doMoveDirection(Ants ants, HashMap<Tile, Tile> orders, Tile antLoc, Aim direction) {
+        // Track all moves, prevent collisions
+        Tile newLoc = ants.getTile(antLoc, direction);
+        if (ants.getIlk(newLoc).isUnoccupied() &&  !orders.containsKey(newLoc)) {
+                    ants.issueOrder(antLoc, direction);
+            orders.put(newLoc, antLoc);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     @Override
     public void doTurn() {
+        HashMap<Tile, Tile> orders = new HashMap<Tile, Tile>();
         Ants ants = getAnts();
         for (Tile myAnt : ants.getMyAnts()) {
             for (Aim direction : Aim.values()) {
-                if (ants.getIlk(myAnt, direction).isPassable()) {
-                    ants.issueOrder(myAnt, direction);
+                if (doMoveDirection(ants, orders, myAnt, direction)) {
                     break;
                 }
             }

@@ -36,6 +36,6 @@ public enum Ilk {
      *         otherwise
      */
     public boolean isUnoccupied() {
-        return this == LAND || this == DEAD;
+        return this == LAND || this == DEAD || this == FOOD;
     }
 }
