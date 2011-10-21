@@ -20,7 +20,7 @@ public class Zelda extends Bot {
         // Track all moves, prevent collisions
         Tile newLoc = ants.getTile(antLoc, direction);
         if (ants.getIlk(newLoc).isUnoccupied() &&  !orders.containsKey(newLoc)) {
-                    ants.issueOrder(antLoc, direction);
+        	ants.issueOrder(antLoc, direction);
             orders.put(newLoc, antLoc);
             return true;
         } else {
@@ -32,6 +32,9 @@ public class Zelda extends Bot {
     public void doTurn() {
         HashMap<Tile, Tile> orders = new HashMap<Tile, Tile>();
         Ants ants = getAnts();
+        
+        
+        
         for (Tile myAnt : ants.getMyAnts()) {
             for (Aim direction : Aim.values()) {
                 if (doMoveDirection(ants, orders, myAnt, direction)) {
