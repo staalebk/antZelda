@@ -3,7 +3,7 @@ import java.io.IOException;
 /**
  * Starter bot implementation.
  */
-public class MyBot extends Bot {
+public class Zelda extends Bot {
     /**
      * Main method executed by the game engine for starting the bot.
      * 
