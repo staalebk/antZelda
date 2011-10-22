@@ -1,9 +1,3 @@
-import google.Aim;
-import google.Ants;
-import google.Bot;
-import google.Ilk;
-import google.Tile;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
