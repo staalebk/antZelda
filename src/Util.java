@@ -22,7 +22,7 @@ public class Util {
 	}
 	
 	public static boolean samePosition(Tile a, Tile b) {
-		return (a.getCol() == b.getCol() && a.getRow() == b.getRow())
+		return (a.getCol() == b.getCol() && a.getRow() == b.getRow());
 	}
 	
 	public static Tile getClosestUnseenTile(Tile myPos) {
