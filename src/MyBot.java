@@ -15,6 +15,8 @@ public class MyBot extends Bot {
 	private FileWriter logfile = null;
 	private boolean debug = false;
 	
+	public static AntPopulation antPop = new AntPopulation(); 
+	
 
 	/**
 	 * Main method executed by the game engine for starting the bot.
@@ -71,8 +73,21 @@ public class MyBot extends Bot {
 		HashMap<Tile, Tile> orders = new HashMap<Tile, Tile>();
 		MyBot.ants = getAnts();
 		
+		antPop.updateAntPopulation();
+		
 		updateSeen(ants);
 
+		for(Ant ant : antPop) {
+			List<Aim> desiredMovement = ant.makeMovementDecision();
+			
+			for (Aim direction : desiredMovement) {
+				if (attemptMovement(ants, orders, ant.getPosition(), direction)) {
+					break;
+				}
+			}
+		}
+		
+		/*
 		for (Tile myAnt : ants.getMyAnts()) {
 			
 			boolean success = false;
@@ -125,6 +140,7 @@ public class MyBot extends Bot {
 				}
 			}
 		}
+		*/
 	}
 
 	public void setAllUnseen() {
