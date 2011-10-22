@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -60,7 +61,20 @@ public class Ant {
 	
 	public List<Aim> makeMovementDecision() {
 		if (!this.wallAvoidanceMode){
-			return this.behavior.move();
+			List<BehaviorDecision> decisions = new ArrayList<BehaviorDecision>();
+			
+			for(Behavior b : this.behavior) {
+				decisions.add(b.move());
+			}
+			
+			if(!decisions.isEmpty()) {
+				Collections.sort(decisions);
+				return decisions.get(0).getMovements();	
+			}
+			
+			// No idea what to do. Return empty movement list...
+			return new ArrayList<Aim>();
+			
 		} else {
 			return this.avoidWall();
 		}
