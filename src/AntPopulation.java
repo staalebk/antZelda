@@ -28,7 +28,7 @@ public class AntPopulation extends ArrayList<Ant> {
 				
 				// If spawn = hill
 				if(sane) {
-					a = new Ant(myAnt.getRow(), myAnt.getCol(), new FoodGathererBehavior());
+					a = new Ant(myAnt.getRow(), myAnt.getCol(), new RandomMovementBehavior());
 					this.add(a);
 				} else {
 					//TODO: OMG! Issues... We are spawning outside ant hill
