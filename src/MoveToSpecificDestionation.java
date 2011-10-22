@@ -1,3 +1,4 @@
+import java.util.Collections;
 import java.util.List;
 
 
@@ -9,8 +10,10 @@ public class MoveToSpecificDestionation extends Behavior {
 
 	@Override
 	public BehaviorDecision move() {
-		List<Aim> movement = MyBot.ants.getDirections(owner.getPosition(), owner.getDestination()); 
-		return  new BehaviorDecision(movement, 15);
+		List<Aim> movement = MyBot.ants.getDirections(owner.getPosition(), owner.getDestination());
+		Collections.shuffle(movement);
+		
+		return new BehaviorDecision(movement, owner.getDestination(), 15);
 	}
 
 }

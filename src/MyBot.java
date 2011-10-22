@@ -80,11 +80,25 @@ public class MyBot extends Bot {
 		for(Ant ant : antPop) {
 			List<Aim> desiredMovement = ant.makeMovementDecision();
 			
+			boolean ableToMove = false;
 			for (Aim direction : desiredMovement) {
 				if (attemptMovement(ants, orders, ant.getPosition(), direction)) {
 					Tile newPos = ants.getTile(ant.getPosition(), direction);
 					ant.setPosition(newPos);
+					ableToMove = true;
 					break;
+				}
+			}
+			
+			if(!ableToMove) {
+				desiredMovement = ant.isStuck();
+				
+				for (Aim direction : desiredMovement) {
+					if (attemptMovement(ants, orders, ant.getPosition(), direction)) {
+						Tile newPos = ants.getTile(ant.getPosition(), direction);
+						ant.setPosition(newPos);
+						break;
+					}
 				}
 			}
 		}
