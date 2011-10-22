@@ -3,7 +3,10 @@ import java.util.List;
 
 public class Ant {
 	private Tile position;
+	private Tile destination;
+	private Tile stuckAt;
 	private Behavior behavior;
+	private boolean wallAvoidanceMode = false;
 
 	public Ant(int row, int col, Behavior behavior) {
 		this.position = new Tile(row, col);
@@ -42,7 +45,15 @@ public class Ant {
 		this.behavior = behavior;
 	}
 	
+	public List<Aim> avoidWall(){
+		return null;
+	}
+	
 	public List<Aim> makeMovementDecision() {
-		return this.behavior.move();
+		if (!this.wallAvoidanceMode){
+			return this.behavior.move();
+		} else {
+			return this.avoidWall();
+		}
 	}
 }
