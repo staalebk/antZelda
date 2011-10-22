@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -5,12 +6,20 @@ public class Ant {
 	private Tile position;
 	private Tile destination;
 	private Tile stuckAt;
-	private Behavior behavior;
+	private List<Behavior> behavior = null;
 	private boolean wallAvoidanceMode = false;
 
-	public Ant(int row, int col, Behavior behavior) {
+	public Ant(int row, int col) {
 		this.position = new Tile(row, col);
-		this.behavior = behavior;
+		this.behavior = new ArrayList<Behavior>();
+	}
+	
+	public void addBehavior(Behavior b) {
+		this.behavior.add(b);
+	}
+	
+	public void clearBehaviors() {
+		this.behavior.clear();
 	}
 	
 	public Tile getPosition() {
@@ -21,6 +30,14 @@ public class Ant {
 		this.position = position;
 	}
 	
+	public Tile getDestination() {
+		return destination;
+	}
+
+	public void setDestination(Tile destination) {
+		this.destination = destination;
+	}
+
 	public void setCol(int col) {
 		this.position = new Tile(this.position.getRow(), col);
 	}
@@ -35,14 +52,6 @@ public class Ant {
 	
 	public int getRow() {
 		return this.position.getRow();
-	}
-
-	public Behavior getBehavior() {
-		return behavior;
-	}
-
-	public void setBehavior(Behavior behavior) {
-		this.behavior = behavior;
 	}
 	
 	public List<Aim> avoidWall(){

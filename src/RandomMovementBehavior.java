@@ -3,14 +3,18 @@ import java.util.Collections;
 import java.util.List;
 
 
-public class RandomMovementBehavior implements Behavior {
+public class RandomMovementBehavior extends Behavior {
+
+	public RandomMovementBehavior(Ant ant) {
+		super(ant);
+	}
 
 	@Override
-	public List<Aim> move() {
+	public BehaviorDecision move() {
 		// Move a random direction
 		List<Aim> pDir = Arrays.asList(Aim.values());
 		Collections.shuffle(pDir);
 		
-		return pDir;
+		return new BehaviorDecision(pDir, 1);
 	}
 }
