@@ -9,9 +9,12 @@ import java.util.List;
  * Starter bot implementation.
  */
 public class MyBot extends Bot {
-	boolean seenTiles[][];
-	FileWriter logfile = null;
-	boolean debug = false;
+	public static boolean seenTiles[][];
+	public static Ants ants = null;
+	
+	private FileWriter logfile = null;
+	private boolean debug = false;
+	
 
 	/**
 	 * Main method executed by the game engine for starting the bot.
@@ -66,23 +69,19 @@ public class MyBot extends Bot {
 	@Override
 	public void doTurn() {
 		HashMap<Tile, Tile> orders = new HashMap<Tile, Tile>();
-		Ants ants = getAnts();
-
+		MyBot.ants = getAnts();
+		
 		updateSeen(ants);
 
 		for (Tile myAnt : ants.getMyAnts()) {
+			
+			boolean success = false;
+			
 			// Look for food tiles
 			int distance = Integer.MAX_VALUE;
-			Tile food = null;
-			boolean success = false;
-			for (Tile foodTile : ants.getFoodTiles()) {
-				int d = ants.getDistance(foodTile, myAnt);
-				if (d < distance) {
-					distance = d;
-					food = foodTile;
-				}
-			}
-
+			Tile food = Util.getClosestTile(myAnt, ants.getFoodTiles());
+			
+			
 			if (food != null) {
 				// Found food. Try to move towards it...
 				List<Aim> pDir = ants.getDirections(myAnt, food);
@@ -97,21 +96,8 @@ public class MyBot extends Bot {
 
 			} else {
 				// Look for unseen tiles
-				Tile unseen = null;
-				distance = Integer.MAX_VALUE;
-				for (int row = 0; row < ants.getRows(); row++) {
-					for (int col = 0; col < ants.getCols(); col++) {
-						if (!seenTiles[row][col]) {
-							Tile unseenTile = new Tile(row, col);
-							int d = ants.getDistance(unseenTile, myAnt);
-							if (d < distance) {
-								distance = d;
-								unseen = unseenTile;
-							}
-						}
-					}
-				}
-
+				Tile unseen = Util.getClosestUnseenTile(myAnt);
+				
 				if (unseen != null) {
 					// Found unseen tile. Explore in its direction
 					List<Aim> pDir = ants.getDirections(myAnt, unseen);
