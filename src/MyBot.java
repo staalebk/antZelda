@@ -1,5 +1,6 @@
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +44,7 @@ public class MyBot extends Bot {
 
 		seenTiles = new boolean[rows][cols];
 		setAllUnseen();
-		if (debug) {		
+		if (debug) {
 			try {
 				logfile = new FileWriter("c:/temp/bot_log.txt");
 			} catch (IOException e) {
@@ -73,6 +74,7 @@ public class MyBot extends Bot {
 			// Look for food tiles
 			int distance = Integer.MAX_VALUE;
 			Tile food = null;
+			boolean success = false;
 			for (Tile foodTile : ants.getFoodTiles()) {
 				int d = ants.getDistance(foodTile, myAnt);
 				if (d < distance) {
@@ -88,6 +90,7 @@ public class MyBot extends Bot {
 				for (Aim direction : pDir) {
 					if (attemptMovement(ants, orders, myAnt, direction)) {
 						addToLog("Going for food! Ant at " + myAnt + " wants to go to " + food + " (dist: " + Math.sqrt(distance) + ")");
+						success = true;
 						break;
 					}
 				}
@@ -116,21 +119,24 @@ public class MyBot extends Bot {
 					for (Aim direction : pDir) {
 						if (attemptMovement(ants, orders, myAnt, direction)) {
 							addToLog("Going to explore! Ant at " + myAnt + " wants to go to " + unseen + " (dist: " + Math.sqrt(distance) + ")");
+							success = true;
 							break;
 						}
 					}
 
-				} else {
-					// Crazy move mode
-					for (Aim direction : Aim.values()) {
-						if (attemptMovement(ants, orders, myAnt, direction)) {
-							addToLog("Going nuts!");
-							setAllUnseen();
-							break;
-						}
+				}
+			}
+			if (!success) {
+				// Crazy move mode
+				List<Aim> pDir = Arrays.asList(Aim.values());
+				Collections.shuffle(pDir);
+				for (Aim direction : pDir) {
+					if (attemptMovement(ants, orders, myAnt, direction)) {
+						addToLog("Going nuts!");
+						setAllUnseen();
+						break;
 					}
 				}
-
 			}
 		}
 	}
