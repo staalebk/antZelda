@@ -21,6 +21,10 @@ public class Util {
 		return closest;
 	}
 	
+	public static boolean samePosition(Tile a, Tile b) {
+		return (a.getCol() == b.getCol() && a.getRow() == b.getRow())
+	}
+	
 	public static Tile getClosestUnseenTile(Tile myPos) {
 		Tile unseen = null;
 		
