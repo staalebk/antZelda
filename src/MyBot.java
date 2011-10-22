@@ -82,6 +82,8 @@ public class MyBot extends Bot {
 			
 			for (Aim direction : desiredMovement) {
 				if (attemptMovement(ants, orders, ant.getPosition(), direction)) {
+					Tile newPos = ants.getTile(ant.getPosition(), direction);
+					ant.setPosition(newPos);
 					break;
 				}
 			}
