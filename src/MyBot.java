@@ -44,7 +44,7 @@ public class MyBot extends Bot {
 		setAllUnseen();
 		
 		try {
-			logfile = new FileWriter("c:/kjell.txt");
+			logfile = new FileWriter("c:/temp/bot_log.txt");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
