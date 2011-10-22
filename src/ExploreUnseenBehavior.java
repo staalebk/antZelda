@@ -17,8 +17,8 @@ public class ExploreUnseenBehavior extends Behavior {
 			// Found unseen tile. Explore in its direction
 			List<Aim> pDir = MyBot.ants.getDirections(owner.getPosition(), unseen);
 			Collections.shuffle(pDir);
-			
-			return new BehaviorDecision(pDir, 9); 
+						
+			return new BehaviorDecision(pDir, unseen, 9); 
 		} else {
 			return BehaviorDecision.NO_DECISION;
 		}

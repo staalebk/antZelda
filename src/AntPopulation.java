@@ -31,7 +31,7 @@ public class AntPopulation extends ArrayList<Ant> {
 					a = new Ant(myAnt.getRow(), myAnt.getCol());
 					a.addBehavior(new CollectClosestFoodBehavior(a));
 					a.addBehavior(new ExploreUnseenBehavior(a));
-					a.addBehavior(new RandomMovementBehavior(a));
+					//a.addBehavior(new RandomMovementBehavior(a));
 					this.add(a);
 					
 				} else {

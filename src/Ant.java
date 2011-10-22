@@ -1,3 +1,4 @@
+import java.beans.DesignMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -110,7 +111,11 @@ public class Ant {
 			
 			if(!decisions.isEmpty()) {
 				Collections.sort(decisions);
-				return decisions.get(0).getMovements();	
+				
+				BehaviorDecision bestDecision = decisions.get(0); 
+				this.setDestination(bestDecision.getDestination());
+				
+				return bestDecision.getMovements();	
 			}
 			
 			// No idea what to do. Return empty movement list...
