@@ -10,6 +10,7 @@ import java.util.List;
 public class MyBot extends Bot {
 	boolean seenTiles[][];
 	FileWriter logfile = null;
+	boolean debug = false;
 
 	/**
 	 * Main method executed by the game engine for starting the bot.
@@ -39,22 +40,25 @@ public class MyBot extends Bot {
 	@Override
 	public void setup(int loadTime, int turnTime, int rows, int cols, int turns, int viewRadius2, int attackRadius2, int spawnRadius2) {
 		super.setup(loadTime, turnTime, rows, cols, turns, viewRadius2, attackRadius2, spawnRadius2);
-		
+
 		seenTiles = new boolean[rows][cols];
 		setAllUnseen();
-		
-		try {
-			logfile = new FileWriter("c:/temp/bot_log.txt");
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (debug) {		
+			try {
+				logfile = new FileWriter("c:/temp/bot_log.txt");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
 	public void addToLog(String log) {
-		try {
-			logfile.write(log + "\n");
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (debug) {
+			try {
+				logfile.write(log + "\n");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -62,9 +66,9 @@ public class MyBot extends Bot {
 	public void doTurn() {
 		HashMap<Tile, Tile> orders = new HashMap<Tile, Tile>();
 		Ants ants = getAnts();
-		
+
 		updateSeen(ants);
-		
+
 		for (Tile myAnt : ants.getMyAnts()) {
 			// Look for food tiles
 			int distance = Integer.MAX_VALUE;
@@ -76,7 +80,7 @@ public class MyBot extends Bot {
 					food = foodTile;
 				}
 			}
-			
+
 			if (food != null) {
 				// Found food. Try to move towards it...
 				List<Aim> pDir = ants.getDirections(myAnt, food);
@@ -87,7 +91,7 @@ public class MyBot extends Bot {
 						break;
 					}
 				}
-				
+
 			} else {
 				// Look for unseen tiles
 				Tile unseen = null;
@@ -104,7 +108,7 @@ public class MyBot extends Bot {
 						}
 					}
 				}
-				
+
 				if (unseen != null) {
 					// Found unseen tile. Explore in its direction
 					List<Aim> pDir = ants.getDirections(myAnt, unseen);
@@ -115,7 +119,7 @@ public class MyBot extends Bot {
 							break;
 						}
 					}
-					
+
 				} else {
 					// Crazy move mode
 					for (Aim direction : Aim.values()) {
@@ -126,7 +130,7 @@ public class MyBot extends Bot {
 						}
 					}
 				}
-				
+
 			}
 		}
 	}
@@ -151,17 +155,29 @@ public class MyBot extends Bot {
 				}
 				if (seenTiles[row][col]) {
 					Tile newLoc = new Tile(row, col);
-					
+
 					Ilk target = ants.getIlk(newLoc);
-					switch(target) {
-						case DEAD: 		rowstatus += "x"; break;
-						case ENEMY_ANT: rowstatus += "e"; break;
-						case FOOD: 		rowstatus += "f"; break;
-						case LAND: 		rowstatus += " "; break;
-						case MY_ANT: 	rowstatus += "M"; break;
-						case WATER: 	rowstatus += "w"; break;
+					switch (target) {
+					case DEAD:
+						rowstatus += "x";
+						break;
+					case ENEMY_ANT:
+						rowstatus += "e";
+						break;
+					case FOOD:
+						rowstatus += "f";
+						break;
+					case LAND:
+						rowstatus += " ";
+						break;
+					case MY_ANT:
+						rowstatus += "M";
+						break;
+					case WATER:
+						rowstatus += "w";
+						break;
 					}
-						
+
 				} else {
 					rowstatus += "?";
 				}
@@ -173,4 +189,3 @@ public class MyBot extends Bot {
 		addToLog("------------------------------");
 	}
 }
-
