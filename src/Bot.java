@@ -1,3 +1,4 @@
+
 /**
  * Provides basic game state handling.
  */
