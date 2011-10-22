@@ -33,6 +33,7 @@ public class AntPopulation extends ArrayList<Ant> {
 					a.addBehavior(new ExploreUnseenBehavior(a));
 					a.addBehavior(new RandomMovementBehavior(a));
 					this.add(a);
+					
 				} else {
 					//TODO: OMG! Issues... We are spawning outside ant hill
 				} 

@@ -36,6 +36,6 @@ public class BehaviorDecision implements Comparable<BehaviorDecision> {
 			return 0;
 		}
 		
-		return (this.urgency > o.getUrgency()) ? 1 : -1;
+		return (this.urgency > o.getUrgency()) ? -1 : 1;
 	}
 }
