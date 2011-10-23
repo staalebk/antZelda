@@ -6,6 +6,7 @@ import java.util.List;
 
 
 public class Ant {
+	private int antID;
 	private Tile position;
 	private Tile destination;
 	private Tile stuckAt;
@@ -13,6 +14,7 @@ public class Ant {
 	private boolean wallAvoidanceMode = false;
 
 	public Ant(int row, int col) {
+		this.antID = AntPopulation.antCount++;
 		this.position = new Tile(row, col);
 		this.behavior = new ArrayList<Behavior>();
 	}
@@ -101,8 +103,10 @@ public class Ant {
 				Collections.sort(decisions);
 				
 				BehaviorDecision bestDecision = decisions.get(0); 
-				this.setDestination(bestDecision.getDestination());
+
+				Util.addToLog("Ant " + antID + ": " + bestDecision.getExplaination());
 				
+				this.setDestination(bestDecision.getDestination());
 				return bestDecision.getMovements();	
 			}
 			
@@ -110,6 +114,7 @@ public class Ant {
 			return new ArrayList<Aim>();
 			
 		} else {
+			Util.addToLog("Ant " + antID + ": Avoiding wall trying to get to " + this.getDestination());
 			return this.avoidWall();
 		}
 	}

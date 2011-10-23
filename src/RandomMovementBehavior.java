@@ -15,6 +15,6 @@ public class RandomMovementBehavior extends Behavior {
 		List<Aim> pDir = Arrays.asList(Aim.values());
 		Collections.shuffle(pDir);
 		
-		return new BehaviorDecision(pDir, null, 1);
+		return new BehaviorDecision(pDir, null, "Random movement", 1);
 	}
 }

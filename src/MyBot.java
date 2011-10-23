@@ -1,7 +1,4 @@
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -12,8 +9,7 @@ public class MyBot extends Bot {
 	public static boolean seenTiles[][];
 	public static Ants ants = null;
 	
-	private FileWriter logfile = null;
-	private boolean debug = false;
+
 	
 	public static AntPopulation antPop = new AntPopulation(); 
 	
@@ -49,24 +45,8 @@ public class MyBot extends Bot {
 
 		seenTiles = new boolean[rows][cols];
 		setAllUnseen();
-		if (debug) {
-			try {
-				logfile = new FileWriter("c:/temp/bot_log.txt");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 
-	public void addToLog(String log) {
-		if (debug) {
-			try {
-				logfile.write(log + "\n");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
 
 	@Override
 	public void doTurn() {
@@ -77,6 +57,7 @@ public class MyBot extends Bot {
 		
 		updateSeen(ants);
 
+		Util.addToLog("------- Desicions -------");
 		for(Ant ant : antPop) {
 			List<Aim> desiredMovement = ant.makeMovementDecision();
 			
@@ -102,6 +83,7 @@ public class MyBot extends Bot {
 				}
 			}
 		}
+		Util.addToLog("-------------------------");
 		
 		/*
 		for (Tile myAnt : ants.getMyAnts()) {
@@ -169,8 +151,9 @@ public class MyBot extends Bot {
 	}
 
 	public void updateSeen(Ants ants) {
-		String rowstatus = "";
+		Util.addToLog("---------- MAP ------------");
 		for (int row = 0; row < ants.getRows(); row++) {
+			String rowstatus = String.format("%3d ", row);			
 			for (int col = 0; col < ants.getCols(); col++) {
 				for (Tile ant : ants.getMyAnts()) {
 					if (ants.getDistance(ant, new Tile(row, col)) < ants.getViewRadius2()) {
@@ -189,7 +172,11 @@ public class MyBot extends Bot {
 						rowstatus += "e";
 						break;
 					case FOOD:
-						rowstatus += "f";
+						if(ants.getFoodTiles().contains(new Tile(row,col))) {
+							rowstatus += "f";
+						} else {
+							rowstatus += " ";
+						}
 						break;
 					case LAND:
 						rowstatus += " ";
@@ -207,9 +194,8 @@ public class MyBot extends Bot {
 				}
 
 			}
-			addToLog(rowstatus);
-			rowstatus = "";
+			Util.addToLog(rowstatus);
 		}
-		addToLog("------------------------------");
+		Util.addToLog("---------------------------");
 	}
 }

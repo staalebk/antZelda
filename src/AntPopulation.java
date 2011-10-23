@@ -5,6 +5,8 @@ import java.util.Set;
 @SuppressWarnings("serial")
 public class AntPopulation extends ArrayList<Ant> {
 	
+	public static int antCount = 0;
+	
 	// Called each round to move data from myAnts to AntPopulation
 	public void updateAntPopulation() {
 		Set<Tile> myAnts = MyBot.ants.getMyAnts();

@@ -13,7 +13,7 @@ public class MoveToSpecificDestionation extends Behavior {
 		List<Aim> movement = MyBot.ants.getDirections(owner.getPosition(), owner.getDestination());
 		Collections.shuffle(movement);
 		
-		return new BehaviorDecision(movement, owner.getDestination(), 15);
+		return new BehaviorDecision(movement, owner.getDestination(), "Moving to specific destination at " + owner.getDestination(), 15);
 	}
 
 }

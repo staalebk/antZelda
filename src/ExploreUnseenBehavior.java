@@ -18,7 +18,7 @@ public class ExploreUnseenBehavior extends Behavior {
 			List<Aim> pDir = MyBot.ants.getDirections(owner.getPosition(), unseen);
 			Collections.shuffle(pDir);
 						
-			return new BehaviorDecision(pDir, unseen, 9); 
+			return new BehaviorDecision(pDir, unseen, "Moving to unseen square at " + unseen, 9); 
 		} else {
 			return BehaviorDecision.NO_DECISION;
 		}

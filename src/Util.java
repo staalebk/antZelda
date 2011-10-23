@@ -1,7 +1,12 @@
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Set;
 
 
 public class Util {
+	
+	private static boolean debug = true;
+	private static FileWriter logfile = null;
 	
 	public static Tile getClosestTile(Tile myPos, Set<Tile> tiles) {
 		
@@ -43,6 +48,25 @@ public class Util {
 		}
 		
 		return unseen;
+	}
+	
+
+	public static void addToLog(String log) {
+		if (debug) {
+			if(logfile == null) {
+				try {
+					logfile = new FileWriter("c:/temp/bot_log.txt");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			try {
+				logfile.write(log + "\n");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public static boolean canMoveDirection(Tile mypos, Aim direction){
