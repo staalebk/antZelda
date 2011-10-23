@@ -47,6 +47,6 @@ public class Util {
 	
 	public static boolean canMoveDirection(Tile mypos, Aim direction){
 		Tile newLoc = MyBot.ants.getTile(mypos, direction);
-		return MyBot.ants.getIlk(newLoc).isUnoccupied();
+		return MyBot.ants.getIlk(newLoc).isPassable();
 	}
 }
