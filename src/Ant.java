@@ -10,6 +10,7 @@ public class Ant {
 	private Tile position;
 	private Tile destination;
 	private Tile stuckAt;
+	private Aim lastDirection;
 	private List<Behavior> behavior = null;
 	private boolean wallAvoidanceMode = false;
 
@@ -81,7 +82,18 @@ public class Ant {
 			willMove.add(Aim.WEST);
 		} else if (canMove.size() == 1) {
 			willMove = canMove;
+		} else {
+			if(lastDirection == Aim.SOUTH){
+				willMove.add(Aim.EAST);
+			} else if(lastDirection == Aim.EAST){
+				willMove.add(Aim.NORTH);
+			} else if(lastDirection == Aim.NORTH){
+				willMove.add(Aim.WEST);
+			} else if(lastDirection == Aim.WEST){
+				willMove.add(Aim.SOUTH);
+			}
 		}
+		lastDirection = willMove.get(0);
 		return willMove;
 	}
 	
