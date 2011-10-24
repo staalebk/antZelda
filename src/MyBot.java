@@ -8,9 +8,8 @@ import java.util.List;
 public class MyBot extends Bot {
 	public static boolean seenTiles[][];
 	public static Ants ants = null;
-	
-
-	
+	public static int turnNum = 0;
+		
 	public static AntPopulation antPop = new AntPopulation(); 
 	
 
@@ -50,6 +49,7 @@ public class MyBot extends Bot {
 
 	@Override
 	public void doTurn() {
+		turnNum++;
 		HashMap<Tile, Tile> orders = new HashMap<Tile, Tile>();
 		MyBot.ants = getAnts();
 		
@@ -57,9 +57,11 @@ public class MyBot extends Bot {
 		
 		updateSeen(ants);
 
-		Util.addToLog("------- Desicions -------");
+		Util.addToLog("------- Desicions for turn " + turnNum + " -------");
 		for(Ant ant : antPop) {
 			List<Aim> desiredMovement = ant.makeMovementDecision();
+			
+			desiredMovement = Util.removeIllegalMoves(desiredMovement, ant.getPosition());
 			
 			boolean ableToMove = false;
 			for (Aim direction : desiredMovement) {
@@ -151,7 +153,7 @@ public class MyBot extends Bot {
 	}
 
 	public void updateSeen(Ants ants) {
-		Util.addToLog("---------- MAP ------------");
+		Util.addToLog("---------- Map for turn " + turnNum + " ------------");
 		for (int row = 0; row < ants.getRows(); row++) {
 			String rowstatus = String.format("%3d ", row);			
 			for (int col = 0; col < ants.getCols(); col++) {
@@ -161,9 +163,9 @@ public class MyBot extends Bot {
 					}
 				}
 				if (seenTiles[row][col]) {
-					Tile newLoc = new Tile(row, col);
+					Tile currentTile = new Tile(row, col);
 
-					Ilk target = ants.getIlk(newLoc);
+					Ilk target = ants.getIlk(currentTile);
 					switch (target) {
 					case DEAD:
 						rowstatus += "x";
@@ -172,12 +174,14 @@ public class MyBot extends Bot {
 						rowstatus += "e";
 						break;
 					case FOOD:
-						if(ants.getFoodTiles().contains(new Tile(row,col))) {
+						if(ants.getFoodTiles().contains(currentTile)) {
 							rowstatus += "f";
+							break;							
 						} else {
+							ants.update(Ilk.LAND, currentTile);
 							rowstatus += " ";
+							break;
 						}
-						break;
 					case LAND:
 						rowstatus += " ";
 						break;
