@@ -40,6 +40,14 @@ public class Ant {
 		return destination;
 	}
 
+	public Aim getLastDirection() {
+		return lastDirection;
+	}
+
+	public void setLastDirection(Aim lastDirection) {
+		this.lastDirection = lastDirection;
+	}
+
 	public void setDestination(Tile destination) {
 		this.destination = destination;
 	}

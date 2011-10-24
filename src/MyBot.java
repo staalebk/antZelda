@@ -68,6 +68,7 @@ public class MyBot extends Bot {
 				if (attemptMovement(ants, orders, ant.getPosition(), direction)) {
 					Tile newPos = ants.getTile(ant.getPosition(), direction);
 					ant.setPosition(newPos);
+					ant.setLastDirection(direction);
 					ableToMove = true;
 					break;
 				}
@@ -80,6 +81,7 @@ public class MyBot extends Bot {
 					if (attemptMovement(ants, orders, ant.getPosition(), direction)) {
 						Tile newPos = ants.getTile(ant.getPosition(), direction);
 						ant.setPosition(newPos);
+						ant.setLastDirection(direction);						
 						break;
 					}
 				}
