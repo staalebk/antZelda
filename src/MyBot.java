@@ -73,7 +73,7 @@ public class MyBot extends Bot {
 					break;
 				}
 			}
-			
+			/*
 			if(!ableToMove) {
 				desiredMovement = ant.isStuck();
 				
@@ -85,7 +85,7 @@ public class MyBot extends Bot {
 						break;
 					}
 				}
-			}
+			} */
 		}
 		Util.addToLog("-------------------------");
 		
