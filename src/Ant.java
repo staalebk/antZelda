@@ -102,6 +102,7 @@ public class Ant {
 			}
 		}
 		lastDirection = willMove.get(0);
+		Util.addToLog("Ant " + antID +": Avoiding wall, moving " + willMove.get(0).toString());
 		return willMove;
 	}
 	
