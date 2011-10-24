@@ -1,18 +1,15 @@
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class BehaviorDecision implements Comparable<BehaviorDecision> {
 	
-	public static BehaviorDecision NO_DECISION = new BehaviorDecision(new ArrayList<Aim>(), null, "No descision made", 0);
+	public static BehaviorDecision NO_DECISION = new BehaviorDecision(null, "No descision made", 0);
 	
-	private List<Aim> movements;
+	//private List<Aim> movements;
 	private int urgency = 0;
 	private Tile destination = null;
 	private String explaination = "";
 	
-	public BehaviorDecision(List<Aim> movements, Tile destination, String explaination, int urgency) {
-		this.movements = movements;
+	public BehaviorDecision(Tile destination, String explaination, int urgency) {
 		this.urgency = urgency;
 		this.destination = destination;
 		this.explaination = explaination;
@@ -32,14 +29,6 @@ public class BehaviorDecision implements Comparable<BehaviorDecision> {
 
 	public void setDestination(Tile destination) {
 		this.destination = destination;
-	}
-
-	public List<Aim> getMovements() {
-		return movements;
-	}
-
-	public void setMovements(List<Aim> movements) {
-		this.movements = movements;
 	}
 
 	public int getUrgency() {

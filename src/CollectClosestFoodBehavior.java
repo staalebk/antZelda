@@ -1,5 +1,3 @@
-import java.util.Collections;
-import java.util.List;
 
 public class CollectClosestFoodBehavior extends Behavior {
 
@@ -12,10 +10,9 @@ public class CollectClosestFoodBehavior extends Behavior {
 		Tile food = Util.getClosestTile(owner.getPosition(), MyBot.ants.getFoodTiles());
 
 		if (food != null) {
-			List<Aim> pDir = MyBot.ants.getDirections(owner.getPosition(), food);
-			Collections.shuffle(pDir);
+			int distance = MyBot.ants.getDistance(owner.getPosition(), food);
 			
-			return new BehaviorDecision(pDir, food, "Collecting food at " + food, 10);
+			return new BehaviorDecision(food, "Collecting food at " + food, 100);
 		} else {
 			return BehaviorDecision.NO_DECISION;
 		}

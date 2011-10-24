@@ -114,9 +114,6 @@ public class Ant {
 
 	public List<Aim> makeMovementDecision() {
 
-		/*
-		 * if (!this.wallAvoidanceMode){
-		 */
 		List<BehaviorDecision> decisions = new ArrayList<BehaviorDecision>();
 
 		for (Behavior b : this.behavior) {
@@ -137,14 +134,7 @@ public class Ant {
 			Tile nextTile = p.get(1);
 			return MyBot.ants.getDirections(position, nextTile);
 		}
-		/*
-		 * // No idea what to do. Return empty movement list... return new
-		 * 
-		 * 
-		 * } else { Util.addToLog("Ant " + antID +
-		 * ": Avoiding wall trying to get to " + this.getDestination()); return
-		 * this.avoidWall(); }
-		 */
+
 		return new ArrayList<Aim>();
 		
 
