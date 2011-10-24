@@ -91,9 +91,11 @@ public class Ant {
 				willMove.add(Aim.WEST);
 			} else if(lastDirection == Aim.WEST){
 				willMove.add(Aim.SOUTH);
+			} else if(lastDirection == null){
+				// wtf! stuck on the first turn? suuucks!
+				willMove = canMove;
 			}
 		}
-		lastDirection = willMove.get(0);
 		Util.addToLog("Ant " + antID +": Avoiding wall, moving " + willMove.get(0).toString());
 		return willMove;
 	}
