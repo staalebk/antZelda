@@ -2,7 +2,7 @@
 
 public class BehaviorDecision implements Comparable<BehaviorDecision> {
 	
-	public static BehaviorDecision NO_DECISION = new BehaviorDecision(null, "No descision made", 0);
+	public static BehaviorDecision NO_DECISION = new BehaviorDecision(null, "No decision made", 0);
 	
 	//private List<Aim> movements;
 	private int urgency = 0;

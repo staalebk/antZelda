@@ -1,6 +1,9 @@
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Starter bot implementation.
@@ -10,7 +13,10 @@ public class MyBot extends Bot {
 	public static Ants ants = null;
 	public static int turnNum = 0;
 		
-	public static AntPopulation antPop = new AntPopulation(); 
+	public static AntPopulation antPop = new AntPopulation();
+	
+	// Stores enemy ants hills in case we die and it disappears
+	public static Set<Tile> enemyAntHills = new HashSet<Tile>();
 	
 
 	/**
@@ -45,7 +51,17 @@ public class MyBot extends Bot {
 		seenTiles = new boolean[rows][cols];
 		setAllUnseen();
 	}
-
+	
+	@Override
+	public void removeAnt(int row, int col, int owner) {
+		super.removeAnt(row, col, owner);
+		
+		if(owner == 0) {
+			Ant ant = antPop.getAntAtRowCol(row, col);
+			Util.addToLog("Ant " + ant.getAntID() + ": Has 'retired' at " + ant.getPosition());
+			antPop.remove(ant);
+		}
+	}
 
 	@Override
 	public void doTurn() {
@@ -63,86 +79,18 @@ public class MyBot extends Bot {
 			
 			desiredMovement = Util.removeIllegalMoves(desiredMovement, ant.getPosition());
 			
-			boolean ableToMove = false;
 			for (Aim direction : desiredMovement) {
 				if (attemptMovement(ants, orders, ant.getPosition(), direction)) {
 					Tile newPos = ants.getTile(ant.getPosition(), direction);
 					ant.setPosition(newPos);
 					ant.setLastDirection(direction);
-					ableToMove = true;
 					break;
 				}
 			}
-			/*
-			if(!ableToMove) {
-				desiredMovement = ant.isStuck();
-				
-				for (Aim direction : desiredMovement) {
-					if (attemptMovement(ants, orders, ant.getPosition(), direction)) {
-						Tile newPos = ants.getTile(ant.getPosition(), direction);
-						ant.setPosition(newPos);
-						ant.setLastDirection(direction);						
-						break;
-					}
-				}
-			} */
+			
 		}
 		Util.addToLog("-------------------------");
 		
-		/*
-		for (Tile myAnt : ants.getMyAnts()) {
-			
-			boolean success = false;
-			
-			// Look for food tiles
-			int distance = Integer.MAX_VALUE;
-			Tile food = Util.getClosestTile(myAnt, ants.getFoodTiles());
-			
-			
-			if (food != null) {
-				// Found food. Try to move towards it...
-				List<Aim> pDir = ants.getDirections(myAnt, food);
-				Collections.shuffle(pDir);
-				for (Aim direction : pDir) {
-					if (attemptMovement(ants, orders, myAnt, direction)) {
-						addToLog("Going for food! Ant at " + myAnt + " wants to go to " + food + " (dist: " + Math.sqrt(distance) + ")");
-						success = true;
-						break;
-					}
-				}
-
-			} else {
-				// Look for unseen tiles
-				Tile unseen = Util.getClosestUnseenTile(myAnt);
-				
-				if (unseen != null) {
-					// Found unseen tile. Explore in its direction
-					List<Aim> pDir = ants.getDirections(myAnt, unseen);
-					Collections.shuffle(pDir);
-					for (Aim direction : pDir) {
-						if (attemptMovement(ants, orders, myAnt, direction)) {
-							addToLog("Going to explore! Ant at " + myAnt + " wants to go to " + unseen + " (dist: " + Math.sqrt(distance) + ")");
-							success = true;
-							break;
-						}
-					}
-
-				}
-			}
-			if (!success) {
-				// Crazy move mode
-				List<Aim> pDir = Arrays.asList(Aim.values());
-				Collections.shuffle(pDir);
-				for (Aim direction : pDir) {
-					if (attemptMovement(ants, orders, myAnt, direction)) {
-						addToLog("Going nuts!");
-						setAllUnseen();
-						break;
-					}
-				}
-			}
-		}
-		*/
 	}
 
 	public void setAllUnseen() {
@@ -185,7 +133,12 @@ public class MyBot extends Bot {
 							break;
 						}
 					case LAND:
-						rowstatus += " ";
+						if(ants.getEnemyHills().contains(currentTile)) {
+							rowstatus += "E";
+							MyBot.enemyAntHills.add(currentTile);
+						} else {
+							rowstatus += " ";
+						}
 						break;
 					case MY_ANT:
 						rowstatus += "M";
