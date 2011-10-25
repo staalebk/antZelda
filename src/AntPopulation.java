@@ -14,23 +14,15 @@ public class AntPopulation extends ArrayList<Ant> {
 		Set<Tile> myAnts = MyBot.ants.getMyAnts();
 		
 		createNewSpawnedAnts(myAnts);
-		removeDeadAnts(myAnts);
-	}
-	
-	public void removeDeadAnts(Set<Tile> existingAnts) {
-		
-		for(int i = this.size() - 1; i >= 0; i--) {
-			Ant ant = this.get(0);
-			
-			if(!existingAnts.contains(ant.getPosition())) {
-				this.remove(i);
-			}
-		}
 	}
 	
 	public void createNewSpawnedAnts(Set<Tile> myAnts) {
 		for(Tile myAnt : myAnts) {
 			Ant a = getAntAtRowCol(myAnt.getRow(), myAnt.getCol());
+			
+			if(a != null && MyBot.enemyAntHills.contains(a.getPosition())) {
+				MyBot.enemyAntHills.remove(a.getPosition());
+			}
 			
 			if(a == null) {
 				// Sanitiy check to see if ant spawned on a hill
@@ -67,6 +59,9 @@ public class AntPopulation extends ArrayList<Ant> {
 		
 		// Make our ants willing to explore
 		a.addBehavior(new ExploreUnseenBehavior(a));
+		
+		// If all else fails, we just move about randomly
+		a.addBehavior(new RandomMovementBehavior(a));
 		
 		return a;
 	}

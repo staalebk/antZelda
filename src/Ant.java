@@ -22,6 +22,14 @@ public class Ant {
 		this.behavior.add(b);
 	}
 
+	public int getAntID() {
+		return antID;
+	}
+
+	public void setAntID(int antID) {
+		this.antID = antID;
+	}
+
 	public void clearBehaviors() {
 		this.behavior.clear();
 	}
@@ -123,20 +131,33 @@ public class Ant {
 		if (!decisions.isEmpty()) {
 			Collections.sort(decisions);
 
-			BehaviorDecision bestDecision = decisions.get(0);
+			int d = 0;
+			BehaviorDecision bestDecision = null;
+			List<Tile> p = null;
+			while(p == null && d < decisions.size() - 1) {
+				bestDecision = decisions.get(d);
+			
+				this.setDestination(bestDecision.getDestination());
+				AStarTile path = new AStarTile(destination);
+				p = path.compute(position);
+				d++;
+			}
 
 			Util.addToLog("Ant " + antID + ": " + bestDecision.getExplaination());
-
-			this.setDestination(bestDecision.getDestination());
-			AStarTile path = new AStarTile(destination);
-			List<Tile> p = path.compute(position);
-			//Util.addToLog("path: " + p.toString());
+			
+			if(p == null) {
+				return new ArrayList<Aim>();
+			}
+			
 			Tile nextTile = p.get(1);
 			return MyBot.ants.getDirections(position, nextTile);
 		}
 
 		return new ArrayList<Aim>();
-		
+	}
 
+	@Override
+	public String toString() {
+		return "Ant [antID=" + antID + ", position=" + position + "]";
 	}
 }
