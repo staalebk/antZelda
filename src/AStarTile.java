@@ -18,9 +18,9 @@ public class AStarTile extends AStar<Tile> {
 
 	@Override
 	protected Double g(Tile from, Tile to) {
-		if(MyBot.ants.getMyHills().contains(to)) {
+		/*if(MyBot.ants.getMyHills().contains(to)) {
 			return 40.0;
-		}else if(!MyBot.seenTiles[to.getRow()][to.getCol()]){
+		}else */if(!MyBot.seenTiles[to.getRow()][to.getCol()]){
 			return 5.0;
 		}else if(Util.samePosition(to, from)){
 			return 0.0;

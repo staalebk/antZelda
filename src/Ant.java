@@ -1,10 +1,11 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class Ant {
 	private int antID;
+	private int turnUpdated;
+	private Tile nextTile;
 	private Tile position;
 	private Tile destination;
 	private Aim lastDirection;
@@ -58,14 +59,14 @@ public class Ant {
 		this.destination = destination;
 		recalculatePath();
 	}
-	
+
 	private void recalculatePath() {
 		AStarTile path = new AStarTile(destination);
 		this.plannedPath = path.compute(position);
-		
+
 		Util.addToLog("Ant " + antID + ": Path planning performed (" + this.plannedPath + ")");
-		
-		if(this.plannedPath != null) {
+
+		if (this.plannedPath != null) {
 			this.plannedPath.remove(0);
 		}
 	}
@@ -85,17 +86,18 @@ public class Ant {
 	public int getRow() {
 		return this.position.getRow();
 	}
-	
+
 	public void clearStandStillCount() {
 		this.standStillCount = 0;
 	}
-	
+
 	public void putBackTileInPath(Tile t) {
 		this.plannedPath.add(0, t);
 		this.standStillCount++;
 	}
 
 	public Tile makeMovementDecision() {
+		this.turnUpdated = MyBot.turnNum;
 
 		List<BehaviorDecision> decisions = new ArrayList<BehaviorDecision>();
 
@@ -110,39 +112,64 @@ public class Ant {
 			int d = 0;
 			BehaviorDecision bestDecision = null;
 
-			while((d == 0 || this.plannedPath == null) && d < decisions.size()) {
+			while ((d == 0 || this.plannedPath == null) && d < decisions.size()) {
 				bestDecision = decisions.get(d);
-			
+
 				// If this is a new destination, set it and run path finding
-				if(this.getDestination() == null || (bestDecision.getDestination() != null && !Util.samePosition(bestDecision.getDestination(), this.getDestination()))) {
+				if (this.getDestination() == null
+						|| (bestDecision.getDestination() != null && !Util.samePosition(bestDecision.getDestination(), this.getDestination()))) {
 					this.setDestination(bestDecision.getDestination());
 					updatedPath = true;
 				}
-				
+
 				d++;
 			}
 
 			Util.addToLog("Ant " + antID + ": " + bestDecision.getExplaination());
-			
-			if(!updatedPath && (standStillCount > 5 || plannedPath == null || plannedPath.size() == 0)) {
+
+			if (!updatedPath && (standStillCount > 5 || plannedPath == null || plannedPath.size() == 0)) {
 				recalculatePath();
 			}
-			
-			if(plannedPath == null || plannedPath.size() == 0) {
+
+			if (plannedPath == null || plannedPath.size() == 0) {
 				return this.position;
 			}
-			
-			Tile nextTile = plannedPath.remove(0);
-			
-			if(!MyBot.ants.getIlk(nextTile).isPassable()) {
-				recalculatePath();
+			while (true) {
 				nextTile = plannedPath.remove(0);
+
+				if (!MyBot.ants.getIlk(nextTile).isPassable()) {
+					recalculatePath();
+					nextTile = plannedPath.remove(0);
+				}
+
+				Ant destAnt = MyBot.antPop.getAntAtRowCol(nextTile.getRow(), nextTile.getCol());
+				if (destAnt != null && destAnt.getTurnUpdated() == this.turnUpdated && Util.samePosition(destAnt.getNextTile(), this.position)) {
+							// Success! We can just swap positions!
+							Tile tmp = destAnt.getPosition();
+							destAnt.setPosition(this.position);
+							this.position = tmp;
+							destAnt.nextTile = destAnt.plannedPath.remove(0);
+
+				} else {
+					break;
+				}
 			}
-			
 			return nextTile;
 		}
 
 		return this.position;
+	}
+
+	public Tile getNextTile() {
+		return nextTile;
+	}
+
+	public void setNextTile(Tile nextPosition) {
+		this.nextTile = nextPosition;
+	}
+
+	public int getTurnUpdated() {
+		return turnUpdated;
 	}
 
 	@Override
