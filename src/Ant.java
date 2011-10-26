@@ -111,10 +111,10 @@ public class Ant {
 
 			Util.addToLog("Ant " + antID + ": " + bestDecision.getExplaination());
 			
-			if(plannedPath == null) {
+			if(plannedPath == null || plannedPath.size() == 0) {
 				return new ArrayList<Aim>();
 			}
-						
+			
 			Tile nextTile = plannedPath.remove(0);
 			return MyBot.ants.getDirections(position, nextTile);
 		}
