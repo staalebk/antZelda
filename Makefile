@@ -1,17 +1,12 @@
-JAVAC=javac
-JAVAC_ARGS=
-
-SOURCES=MyBot.java
-CLASSES=$(SOURCES:%.java=%.class)
+SRC_DIR=src
+BOT_NAME=MyBot.jar
 
 .PHONY: all clean
 
-all: $(CLASSES)
-	jar cvfm MyBot.jar Manifest.txt $(CLASSES)
-
-%.class: %.java
-	$(JAVAC) $(JAVAC_ARGS) $<
+all: 
+	make -C $(SRC_DIR) all
+	mv $(SRC_DIR)/$(BOT_NAME) .
 
 clean:
-	-rm -Rf *.class
-	-rm -Rf *.jar
+	make -C $(SRC_DIR) clean
+	rm -f *.jar
