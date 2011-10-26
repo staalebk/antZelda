@@ -4,10 +4,19 @@ import java.util.List;
 import java.util.Set;
 
 
+/**
+ * @author olekvi
+ *
+ */
+/**
+ * @author olekvi
+ *
+ */
 public class Util {
 	
 	private static boolean debug = true;
 	private static FileWriter logfile = null;
+	private static String logfileName = null;
 	
 	/**
 	 * Get the closest location from a list of locations. Used to locate the closest food etc.
@@ -98,8 +107,9 @@ public class Util {
 	public static void addToLog(String log) {
 		if (debug) {
 			if(logfile == null) {
+				setLogfileName();
 				try {
-					logfile = new FileWriter("c:/temp/bot_log.txt");
+					logfile = new FileWriter(logfileName);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -122,5 +132,25 @@ public class Util {
 	public static boolean canMoveDirection(Tile mypos, Aim direction){
 		Tile newLoc = MyBot.ants.getTile(mypos, direction);
 		return MyBot.ants.getIlk(newLoc).isPassable();
+	}
+	
+	/**
+	 * Sets logfile name based on operating system
+	 * @
+	 */
+	private static void setLogfileName() {
+		logfileName = "/tmp/bot_log.txt";
+		if (isWindows()) {
+			logfileName = "c:/temp/bot_log.txt";
+		}
+	}
+	
+	/**
+	 * Check to find if we are on a Windows system
+	 * @return true if Windows
+	 */
+	private static boolean isWindows() {
+		String os = System.getProperty("os.name").toLowerCase();
+		return (os.indexOf( "win" ) >= 0);
 	}
 }
