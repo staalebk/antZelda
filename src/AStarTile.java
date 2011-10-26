@@ -42,9 +42,6 @@ public class AStarTile extends AStar<Tile> {
 			if(Util.canMoveDirection(node, direction)){
 				canMove.add(to);
 			}
-			if(!MyBot.seenTiles[to.getRow()][to.getCol()]){
-				canMove.add(to);
-			}
  		}
 		return canMove;
 	}
