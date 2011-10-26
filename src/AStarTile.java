@@ -26,7 +26,7 @@ public class AStarTile extends AStar<Tile> {
 
 	@Override
 	protected Double h(Tile from, Tile to) {
-		return (double)MyBot.ants.getDistance(from, to);
+		return (double)MyBot.ants.getDistance(to, goal);
 	}
 
 	@Override
