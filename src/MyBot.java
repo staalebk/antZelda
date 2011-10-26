@@ -90,6 +90,7 @@ public class MyBot extends Bot {
 					Tile newPos = ants.getTile(ant.getPosition(), direction);
 					ant.setPosition(newPos);
 					ant.setLastDirection(direction);
+					ant.clearStandStillCount();
 					ableToMove = true;
 					break;
 				}

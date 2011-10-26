@@ -10,6 +10,7 @@ public class Ant {
 	private Aim lastDirection;
 	private List<Tile> plannedPath = new ArrayList<Tile>();
 	private List<Behavior> behavior = null;
+	private int standStillCount = 0;
 
 	public Ant(int row, int col) {
 		this.antID = AntPopulation.antCount++;
@@ -85,8 +86,13 @@ public class Ant {
 		return this.position.getRow();
 	}
 	
+	public void clearStandStillCount() {
+		this.standStillCount = 0;
+	}
+	
 	public void putBackTileInPath(Tile t) {
 		this.plannedPath.add(0, t);
+		this.standStillCount++;
 	}
 
 	public Tile makeMovementDecision() {
@@ -118,7 +124,7 @@ public class Ant {
 
 			Util.addToLog("Ant " + antID + ": " + bestDecision.getExplaination());
 			
-			if(!updatedPath && (plannedPath == null || plannedPath.size() == 0)) {
+			if(!updatedPath && (standStillCount > 5 || plannedPath == null || plannedPath.size() == 0)) {
 				recalculatePath();
 			}
 			
