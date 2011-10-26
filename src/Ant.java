@@ -61,7 +61,7 @@ public class Ant {
 		AStarTile path = new AStarTile(destination);
 		this.plannedPath = path.compute(position);
 		
-		Util.addToLog("Ant " + antID + ": Path planning performed");
+		Util.addToLog("Ant " + antID + ": Path planning performed (" + this.plannedPath + ")");
 		
 		if(this.plannedPath != null) {
 			this.plannedPath.remove(0);
@@ -116,6 +116,12 @@ public class Ant {
 			}
 			
 			Tile nextTile = plannedPath.remove(0);
+			
+			if(!MyBot.ants.getIlk(nextTile).isPassable()) {
+				recalculatePath();
+				nextTile = plannedPath.remove(0);
+			}
+			
 			return MyBot.ants.getDirections(position, nextTile);
 		}
 

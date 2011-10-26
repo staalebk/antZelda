@@ -1,5 +1,4 @@
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,7 +11,7 @@ import java.util.Set;
 public class MyBot extends Bot {
 	public static boolean seenTiles[][];
 	public static Ants ants = null;
-	public static int turnNum = 0;
+	public static int turnNum = -1;
 		
 	public static AntPopulation antPop = new AntPopulation();
 	
