@@ -6,7 +6,7 @@ import java.util.Set;
 
 public class Util {
 	
-	private static boolean debug = false;
+	private static boolean debug = true;
 	private static FileWriter logfile = null;
 	
 	/**
