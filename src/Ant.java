@@ -7,6 +7,7 @@ public class Ant {
 	private Tile position;
 	private Tile destination;
 	private Aim lastDirection;
+	private List<Tile> plannedPath = new ArrayList<Tile>();
 	private List<Behavior> behavior = null;
 
 	public Ant(int row, int col) {
@@ -53,6 +54,18 @@ public class Ant {
 
 	public void setDestination(Tile destination) {
 		this.destination = destination;
+		recalculatePath();
+	}
+	
+	private void recalculatePath() {
+		AStarTile path = new AStarTile(destination);
+		this.plannedPath = path.compute(position);
+		
+		Util.addToLog("Ant " + antID + ": Path planning performed");
+		
+		if(this.plannedPath != null) {
+			this.plannedPath.remove(0);
+		}
 	}
 
 	public void setCol(int col) {
@@ -84,23 +97,25 @@ public class Ant {
 
 			int d = 0;
 			BehaviorDecision bestDecision = null;
-			List<Tile> p = null;
-			while(p == null && d < decisions.size() - 1) {
+
+			while((d == 0 || this.plannedPath == null) && d < decisions.size()) {
 				bestDecision = decisions.get(d);
 			
-				this.setDestination(bestDecision.getDestination());
-				AStarTile path = new AStarTile(destination);
-				p = path.compute(position);
+				// If this is a new destination, set it and run path finding
+				if(this.getDestination() == null || (bestDecision.getDestination() != null && !Util.samePosition(bestDecision.getDestination(), this.getDestination()))) {
+					this.setDestination(bestDecision.getDestination());
+				}
+				
 				d++;
 			}
 
 			Util.addToLog("Ant " + antID + ": " + bestDecision.getExplaination());
 			
-			if(p == null) {
+			if(plannedPath == null) {
 				return new ArrayList<Aim>();
 			}
 						
-			Tile nextTile = p.get(1);
+			Tile nextTile = plannedPath.remove(0);
 			return MyBot.ants.getDirections(position, nextTile);
 		}
 
