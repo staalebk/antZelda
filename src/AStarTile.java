@@ -18,9 +18,6 @@ public class AStarTile extends AStar<Tile> {
 
 	@Override
 	protected Double g(Tile from, Tile to) {
-		if(MyBot.ants.getMyHills().contains(to)) {
-			return Double.MAX_VALUE;
-		}
 		return (double)MyBot.ants.getDistance(from, to);
 	}
 
