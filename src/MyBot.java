@@ -75,6 +75,11 @@ public class MyBot extends Bot {
 
 		Util.addToLog("------- Desicions for turn " + turnNum + " -------");
 		for(Ant ant : antPop) {
+			if(MyBot.ants.getTimeRemaining() < 15){
+				Util.addToLog("PANIC!! Time has run out");
+				break;
+			}
+
 			Tile desiredTile = ant.makeMovementDecision();
 			
 			List<Aim> desiredMovement = ants.getDirections(ant.getPosition(), desiredTile);
