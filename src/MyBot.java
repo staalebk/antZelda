@@ -75,6 +75,10 @@ public class MyBot extends Bot {
 
 		Util.addToLog("------- Desicions for turn " + turnNum + " -------");
 		for(Ant ant : antPop) {
+			if(MyBot.ants.getTimeRemaining() < 15){
+				Util.addToLog("PANIC!! Time has run out");
+				break;
+			}
 			List<Aim> desiredMovement = ant.makeMovementDecision();
 			
 			desiredMovement = Util.removeIllegalMoves(desiredMovement, ant.getPosition());
