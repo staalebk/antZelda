@@ -20,28 +20,13 @@ public class AntPopulation extends ArrayList<Ant> {
 		for(Tile myAnt : myAnts) {
 			Ant a = getAntAtRowCol(myAnt.getRow(), myAnt.getCol());
 			
+			// We are standing one an enemy anthill... remove it from the collection and move on.
 			if(a != null && MyBot.enemyAntHills.contains(a.getPosition())) {
 				MyBot.enemyAntHills.remove(a.getPosition());
 			}
 			
 			if(a == null) {
-				// Sanitiy check to see if ant spawned on a hill
-				boolean sane = false;
-				for(Tile hill : MyBot.ants.getMyHills()) {
-					if(Util.samePosition(hill, myAnt)) {
-						sane = true;
-						break;
-					}
-				}
-				
-				// If spawn = hill
-				if(sane) {
-					this.add(spawnAnt(myAnt));
-					
-				} else {
-					//TODO: OMG! Issues... We are spawning outside ant hill
-					Util.addToLog("Mad issue! Ant spawned outside the ant hill!");
-				} 
+				this.add(spawnAnt(myAnt));
 			}
 		}
 	}
@@ -53,7 +38,7 @@ public class AntPopulation extends ArrayList<Ant> {
 		a.addBehavior(new KillAntHillBehavior(a));
 		
 		// Make our ants want food... The first ten + 50% of the rest collect food
-		if(antCount < 10 || rand.nextInt(10) > 5) {
+		if(antCount < 15 || rand.nextInt(10) > 4) {
 			a.addBehavior(new CollectClosestFoodBehavior(a));
 		}
 		

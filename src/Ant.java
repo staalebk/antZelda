@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -7,10 +6,9 @@ public class Ant {
 	private int antID;
 	private Tile position;
 	private Tile destination;
-	private Tile stuckAt;
 	private Aim lastDirection;
+	private List<Tile> plannedPath = new ArrayList<Tile>();
 	private List<Behavior> behavior = null;
-	private boolean wallAvoidanceMode = false;
 
 	public Ant(int row, int col) {
 		this.antID = AntPopulation.antCount++;
@@ -56,6 +54,18 @@ public class Ant {
 
 	public void setDestination(Tile destination) {
 		this.destination = destination;
+		recalculatePath();
+	}
+	
+	private void recalculatePath() {
+		AStarTile path = new AStarTile(destination);
+		this.plannedPath = path.compute(position);
+		
+		Util.addToLog("Ant " + antID + ": Path planning performed");
+		
+		if(this.plannedPath != null) {
+			this.plannedPath.remove(0);
+		}
 	}
 
 	public void setCol(int col) {
@@ -74,52 +84,6 @@ public class Ant {
 		return this.position.getRow();
 	}
 
-	public List<Aim> avoidWall() {
-		List<Aim> allDirections = Arrays.asList(Aim.values());
-		List<Aim> canMove = new ArrayList<Aim>();
-		List<Aim> cantMove = new ArrayList<Aim>();
-		List<Aim> willMove = new ArrayList<Aim>();
-		for (Aim direction : allDirections) {
-			if (Util.canMoveDirection(this.position, direction)) {
-				canMove.add(direction);
-			} else {
-				cantMove.add(direction);
-			}
-		}
-		if (cantMove.contains(Aim.EAST) && canMove.contains(Aim.SOUTH)) {
-			willMove.add(Aim.SOUTH);
-		} else if (cantMove.contains(Aim.NORTH) && canMove.contains(Aim.EAST)) {
-			willMove.add(Aim.EAST);
-		} else if (cantMove.contains(Aim.WEST) && canMove.contains(Aim.NORTH)) {
-			willMove.add(Aim.NORTH);
-		} else if (cantMove.contains(Aim.SOUTH) && canMove.contains(Aim.WEST)) {
-			willMove.add(Aim.WEST);
-		} else if (canMove.size() == 1) {
-			willMove = canMove;
-		} else {
-			if (lastDirection == Aim.SOUTH) {
-				willMove.add(Aim.EAST);
-			} else if (lastDirection == Aim.EAST) {
-				willMove.add(Aim.NORTH);
-			} else if (lastDirection == Aim.NORTH) {
-				willMove.add(Aim.WEST);
-			} else if (lastDirection == Aim.WEST) {
-				willMove.add(Aim.SOUTH);
-			} else if (lastDirection == null) {
-				// wtf! stuck on the first turn? suuucks!
-				willMove = canMove;
-			}
-		}
-		Util.addToLog("Ant " + antID + ": Avoiding wall, moving " + willMove.get(0).toString());
-		return willMove;
-	}
-
-	public List<Aim> isStuck() {
-		this.stuckAt = this.getPosition();
-		this.wallAvoidanceMode = true;
-		return this.avoidWall();
-	}
-
 	public List<Aim> makeMovementDecision() {
 
 		List<BehaviorDecision> decisions = new ArrayList<BehaviorDecision>();
@@ -133,23 +97,25 @@ public class Ant {
 
 			int d = 0;
 			BehaviorDecision bestDecision = null;
-			List<Tile> p = null;
-			while(p == null && d < decisions.size() - 1) {
+
+			while((d == 0 || this.plannedPath == null) && d < decisions.size()) {
 				bestDecision = decisions.get(d);
 			
-				this.setDestination(bestDecision.getDestination());
-				AStarTile path = new AStarTile(destination);
-				p = path.compute(position);
+				// If this is a new destination, set it and run path finding
+				if(this.getDestination() == null || (bestDecision.getDestination() != null && !Util.samePosition(bestDecision.getDestination(), this.getDestination()))) {
+					this.setDestination(bestDecision.getDestination());
+				}
+				
 				d++;
 			}
 
 			Util.addToLog("Ant " + antID + ": " + bestDecision.getExplaination());
 			
-			if(p == null) {
+			if(plannedPath == null || plannedPath.size() == 0) {
 				return new ArrayList<Aim>();
 			}
 			
-			Tile nextTile = p.get(1);
+			Tile nextTile = plannedPath.remove(0);
 			return MyBot.ants.getDirections(position, nextTile);
 		}
 

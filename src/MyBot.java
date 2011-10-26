@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -95,11 +96,8 @@ public class MyBot extends Bot {
 
 	public void setAllUnseen() {
 		for (int row = 0; row < seenTiles.length; row++) {
-			for (int col = 0; col < seenTiles[row].length; col++) {
-				seenTiles[row][col] = false;
-			}
+			Arrays.fill(seenTiles[row], false);
 		}
-
 	}
 
 	public void updateSeen(Ants ants) {
