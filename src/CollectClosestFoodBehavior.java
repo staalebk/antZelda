@@ -10,7 +10,7 @@ public class CollectClosestFoodBehavior extends Behavior {
 		Tile food = Util.getClosestTile(owner.getPosition(), MyBot.ants.getFoodTiles());
 
 		if (food != null) {
-			int distance = (int)Math.sqrt((double)MyBot.ants.getDistance(owner.getPosition(), food)) * 5;
+			int distance = (int)Math.sqrt((double)MyBot.ants.getDistance(owner.getPosition(), food)) * 4;
 			
 			return new BehaviorDecision(food, "Collecting food at " + food, Math.max(10, 100 - distance));
 		} else {

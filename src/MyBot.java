@@ -75,17 +75,23 @@ public class MyBot extends Bot {
 
 		Util.addToLog("------- Desicions for turn " + turnNum + " -------");
 		for(Ant ant : antPop) {
-			List<Aim> desiredMovement = ant.makeMovementDecision();
+			Tile desiredTile = ant.makeMovementDecision();
 			
-			desiredMovement = Util.removeIllegalMoves(desiredMovement, ant.getPosition());
+			List<Aim> desiredMovement = ants.getDirections(ant.getPosition(), desiredTile);
 			
+			boolean ableToMove = false;
 			for (Aim direction : desiredMovement) {
 				if (attemptMovement(ants, orders, ant.getPosition(), direction)) {
 					Tile newPos = ants.getTile(ant.getPosition(), direction);
 					ant.setPosition(newPos);
 					ant.setLastDirection(direction);
+					ableToMove = true;
 					break;
 				}
+			}
+			
+			if(!ableToMove) {
+				ant.putBackTileInPath(desiredTile);
 			}
 			
 		}

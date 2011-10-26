@@ -86,11 +86,11 @@ public class Util {
 	public static List<Aim> removeIllegalMoves(List<Aim> desiredMovement, Tile antPos) {
 		// Reverse iterate through all movements and remove illegal ones
 		for(int i = desiredMovement.size() - 1; i >= 0; i--) {
-			
 			Aim direction = desiredMovement.get(i);
+			
 			Tile newLoc = MyBot.ants.getTile(antPos, direction);
 			
-			if(!MyBot.ants.getIlk(newLoc).isUnoccupied()) {
+			if(!MyBot.ants.getIlk(newLoc).isPassable()) {
 				desiredMovement.remove(i);
 			}
 		}

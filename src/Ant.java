@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -83,8 +84,12 @@ public class Ant {
 	public int getRow() {
 		return this.position.getRow();
 	}
+	
+	public void putBackTileInPath(Tile t) {
+		this.plannedPath.add(0, t);
+	}
 
-	public List<Aim> makeMovementDecision() {
+	public Tile makeMovementDecision() {
 
 		List<BehaviorDecision> decisions = new ArrayList<BehaviorDecision>();
 
@@ -95,6 +100,7 @@ public class Ant {
 		if (!decisions.isEmpty()) {
 			Collections.sort(decisions);
 
+			boolean updatedPath = false;
 			int d = 0;
 			BehaviorDecision bestDecision = null;
 
@@ -104,6 +110,7 @@ public class Ant {
 				// If this is a new destination, set it and run path finding
 				if(this.getDestination() == null || (bestDecision.getDestination() != null && !Util.samePosition(bestDecision.getDestination(), this.getDestination()))) {
 					this.setDestination(bestDecision.getDestination());
+					updatedPath = true;
 				}
 				
 				d++;
@@ -111,8 +118,12 @@ public class Ant {
 
 			Util.addToLog("Ant " + antID + ": " + bestDecision.getExplaination());
 			
+			if(!updatedPath && (plannedPath == null || plannedPath.size() == 0)) {
+				recalculatePath();
+			}
+			
 			if(plannedPath == null || plannedPath.size() == 0) {
-				return new ArrayList<Aim>();
+				return this.position;
 			}
 			
 			Tile nextTile = plannedPath.remove(0);
@@ -122,10 +133,10 @@ public class Ant {
 				nextTile = plannedPath.remove(0);
 			}
 			
-			return MyBot.ants.getDirections(position, nextTile);
+			return nextTile;
 		}
 
-		return new ArrayList<Aim>();
+		return this.position;
 	}
 
 	@Override
