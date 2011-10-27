@@ -12,6 +12,7 @@ public class MyBot extends Bot {
 	public static boolean seenTiles[][];
 	public static Ants ants = null;
 	public static int turnNum = -1;
+	public static int antQueue = 1;
 		
 	public static AntPopulation antPop = new AntPopulation();
 	
@@ -75,7 +76,7 @@ public class MyBot extends Bot {
 
 		Util.addToLog("------- Desicions for turn " + turnNum + " -------");
 		for(Ant ant : antPop) {
-			if(MyBot.ants.getTimeRemaining() < 15){
+			if(MyBot.ants.getTimeRemaining() < 20){
 				Util.addToLog("PANIC!! Time has run out");
 				break;
 			}
@@ -165,5 +166,6 @@ public class MyBot extends Bot {
 			Util.addToLog(rowstatus);
 		}
 		Util.addToLog("---------------------------");
+		Util.addToLog("Ants waiting to be spawned: " + MyBot.antQueue);
 	}
 }

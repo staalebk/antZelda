@@ -15,6 +15,7 @@ public class Ant {
 
 	public Ant(int row, int col) {
 		this.antID = AntPopulation.antCount++;
+		MyBot.antQueue--;
 		this.position = new Tile(row, col);
 		this.behavior = new ArrayList<Behavior>();
 	}
@@ -92,6 +93,9 @@ public class Ant {
 	}
 
 	public void putBackTileInPath(Tile t) {
+		if (this.plannedPath == null) {
+			return;
+		}
 		this.plannedPath.add(0, t);
 		this.standStillCount++;
 	}
@@ -130,11 +134,12 @@ public class Ant {
 			if (!updatedPath && (standStillCount > 5 || plannedPath == null || plannedPath.size() == 0)) {
 				recalculatePath();
 			}
-
-			if (plannedPath == null || plannedPath.size() == 0) {
-				return this.position;
-			}
 			while (true) {
+				if (plannedPath == null || plannedPath.size() == 0) {
+					nextTile = this.position;
+					return this.position;
+				}
+
 				nextTile = plannedPath.remove(0);
 
 				if (!MyBot.ants.getIlk(nextTile).isPassable()) {
@@ -144,11 +149,11 @@ public class Ant {
 
 				Ant destAnt = MyBot.antPop.getAntAtRowCol(nextTile.getRow(), nextTile.getCol());
 				if (destAnt != null && destAnt.getTurnUpdated() == this.turnUpdated && Util.samePosition(destAnt.getNextTile(), this.position)) {
-							// Success! We can just swap positions!
-							Tile tmp = destAnt.getPosition();
-							destAnt.setPosition(this.position);
-							this.position = tmp;
-							destAnt.nextTile = destAnt.plannedPath.remove(0);
+					// Success! We can just swap positions!
+					Tile tmp = destAnt.getPosition();
+					destAnt.setPosition(this.position);
+					this.position = tmp;
+					destAnt.nextTile = destAnt.plannedPath.remove(0);
 
 				} else {
 					break;
@@ -156,7 +161,7 @@ public class Ant {
 			}
 			return nextTile;
 		}
-
+		nextTile = this.position;
 		return this.position;
 	}
 

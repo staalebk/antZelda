@@ -8,6 +8,10 @@ public class CollectClosestFoodBehavior extends Behavior {
 	@Override
 	public BehaviorDecision move() {
 		Tile food = Util.getClosestTile(owner.getPosition(), MyBot.ants.getFoodTiles());
+		if(MyBot.antQueue > 100){
+			return BehaviorDecision.NO_DECISION;
+		}
+
 
 		if (food != null) {
 			int distance = (int)Math.sqrt((double)MyBot.ants.getDistance(owner.getPosition(), food)) * 4;
