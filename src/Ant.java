@@ -12,6 +12,15 @@ public class Ant {
 	private List<Tile> plannedPath = new ArrayList<Tile>();
 	private List<Behavior> behavior = null;
 	private int standStillCount = 0;
+	private Tile hillDefend = null;
+
+	public Tile getHillDefend() {
+		return hillDefend;
+	}
+
+	public void setHillDefend(Tile hillDefend) {
+		this.hillDefend = hillDefend;
+	}
 
 	public Ant(int row, int col) {
 		this.antID = AntPopulation.antCount++;
@@ -131,9 +140,9 @@ public class Ant {
 
 			Util.addToLog("Ant " + antID + ": " + bestDecision.getExplaination());
 
-			if (!updatedPath && (standStillCount > 5 || plannedPath == null || plannedPath.size() == 0)) {
+			/*if (!updatedPath && (standStillCount > 5 || plannedPath == null || plannedPath.size() == 0)) {
 				recalculatePath();
-			}
+			} */
 			while (true) {
 				if (plannedPath == null || plannedPath.size() == 0) {
 					nextTile = this.position;

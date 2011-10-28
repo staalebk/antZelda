@@ -13,6 +13,7 @@ public class MyBot extends Bot {
 	public static Ants ants = null;
 	public static int turnNum = -1;
 	public static int antQueue = 1;
+	public static Set<Tile> defendTile = new HashSet<Tile>();
 		
 	public static AntPopulation antPop = new AntPopulation();
 	
@@ -61,6 +62,9 @@ public class MyBot extends Bot {
 			Ant ant = antPop.getAntAtRowCol(row, col);
 			Util.addToLog("Ant " + ant.getAntID() + ": Has 'retired' at " + ant.getPosition());
 			antPop.remove(ant);
+			if(ant.getHillDefend() != null){
+				MyBot.defendTile.remove(ant.getHillDefend());
+			}
 		}
 	}
 

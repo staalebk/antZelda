@@ -33,9 +33,15 @@ public class AntPopulation extends ArrayList<Ant> {
 	
 	public Ant spawnAnt(Tile myAnt) {
 		Ant a = new Ant(myAnt.getRow(), myAnt.getCol());
+		// 10% should guard our ant hill(s).
+		if(rand.nextInt(10) > 8){
+			a.addBehavior(new ProtectAntHillBehaviour(a));
+		}
 		
-		// All ants should kill ant hills
-		a.addBehavior(new KillAntHillBehavior(a));
+		// 90% ants should kill ant hills
+		if(rand.nextInt(10) > 1){
+			a.addBehavior(new KillAntHillBehavior(a));
+		}
 		
 		// Make our ants want food... The first ten + 50% of the rest collect food
 		if(antCount < 15 || rand.nextInt(10) > 4) {

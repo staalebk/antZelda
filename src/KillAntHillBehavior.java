@@ -14,7 +14,7 @@ public class KillAntHillBehavior extends Behavior {
 			return BehaviorDecision.NO_DECISION;
 		}
 		
-		Tile anthill = Util.getClosestTile(owner.getPosition(), MyBot.enemyAntHills);		
+		Tile anthill = Util.getClosestTile(owner.getPosition(), MyBot.ants.getEnemyHills());
 
 		if(anthill != null) {
 			// Found unseen tile. Explore in its direction

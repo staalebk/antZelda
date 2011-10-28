@@ -1,5 +1,6 @@
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -14,7 +15,7 @@ import java.util.Set;
  */
 public class Util {
 	
-	private static boolean debug = false;
+	private static boolean debug = true;
 	private static FileWriter logfile = null;
 	private static String logfileName = null;
 	
@@ -152,5 +153,34 @@ public class Util {
 	private static boolean isWindows() {
 		String os = System.getProperty("os.name").toLowerCase();
 		return (os.indexOf( "win" ) >= 0);
+	}
+	
+	public static List<Tile> getSurroundingTiles(Tile center, int radius){
+		Tile startTile = center;
+		for(int i = 0; i< radius; i++){
+			startTile = MyBot.ants.getTile(startTile, Aim.NORTH);
+			startTile = MyBot.ants.getTile(startTile, Aim.EAST);
+		}
+		List<Tile> ring = new ArrayList<Tile>();
+		ring.add(startTile);
+		Tile tempTile = startTile;
+		for(int i = 0; i< radius + 1; i++){
+			tempTile = MyBot.ants.getTile(tempTile, Aim.SOUTH);
+			ring.add(tempTile);
+		}
+		for(int i = 0; i< radius + 1; i++){
+			tempTile = MyBot.ants.getTile(tempTile, Aim.WEST);
+			ring.add(tempTile);
+		}
+		for(int i = 0; i< radius + 1; i++){
+			tempTile = MyBot.ants.getTile(tempTile, Aim.NORTH);
+			ring.add(tempTile);
+		}
+		for(int i = 0; i< radius; i++){
+			tempTile = MyBot.ants.getTile(tempTile, Aim.EAST);
+			ring.add(tempTile);
+		}
+		
+		return ring;
 	}
 }
